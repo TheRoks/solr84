@@ -1,5 +1,5 @@
 Param(
-    $solrVersion
+	$solrVersion
 )
 
 $solrName = "solr-$solrVersion"
@@ -28,11 +28,11 @@ xcopy web.config ..\wwwroot /Y
 
 Write-Output 'Copy default configset as sitecore'
 $usingDefault = $false
-if(Test-Path "..\wwwroot\server\solr\configsets\_default" -PathType Any){
+if (Test-Path "..\wwwroot\server\solr\configsets\_default" -PathType Any) {
 	$usingDefault = $true
 	xcopy "..\wwwroot\server\solr\configsets\_default\*.*" "..\wwwroot\server\solr\configsets\sitecore\*" /s/h/e/k/f/c/Y
 }
-else{
+else {
 	xcopy "..\wwwroot\server\solr\configsets\basic_configs\*.*" "..\wwwroot\server\solr\configsets\sitecore\*" /s/h/e/k/f/c/Y
 }
 
@@ -43,7 +43,7 @@ $xml = New-Object XML
 $path = "..\wwwroot\server\solr\configsets\sitecore\conf\managed-schema"
 $xml.Load($path)
 
-$uniqueKey =  $xml.SelectSingleNode("//uniqueKey")
+$uniqueKey = $xml.SelectSingleNode("//uniqueKey")
 $uniqueKey.InnerText = "_uniqueid"
 
 $field = $xml.CreateElement("field")
@@ -59,20 +59,22 @@ $xml.Save($path)
 
 $sitecoreCores = @(
 	"sitecore_analytics_index", 
-    "sitecore_core_index", 
-    "sitecore_fxm_master_index", 
+	"sitecore_core_index", 
+	"sitecore_fxm_master_index", 
 	"sitecore_fxm_web_index", 
 	"sitecore_list_index", 
-    "sitecore_marketing_asset_index_master", 
-    "sitecore_marketing_asset_index_web", 
+	"sitecore_marketing_asset_index_master", 
+	"sitecore_marketing_asset_index_web", 
 	"sitecore_marketingdefinitions_master", 
 	"sitecore_marketingdefinitions_web", 
-    "sitecore_master_index", 
+	"sitecore_master_index", 
 	"sitecore_suggested_test_index", 
 	"sitecore_testing_index", 
 	"sitecore_web_index", 
-    "social_messages_master", 
-	"social_messages_web"
+	"social_messages_master", 
+	"social_messages_web",
+	"cb_custom_master_index",
+	"cb_custom_web_index"
 )
 
 foreach ($coreName in $sitecoreCores) {
@@ -86,7 +88,7 @@ foreach ($coreName in $sitecoreCores) {
 
 $xdbCores = @(
 	"xdb", 
-    "xdb_rebuild"
+	"xdb_rebuild"
 )
 
 foreach ($coreName in $xdbCores) {
@@ -94,10 +96,10 @@ foreach ($coreName in $xdbCores) {
 	New-Item "..\wwwroot\server\solr\" -Name "$coreName" -ItemType "directory"
 	New-Item "..\wwwroot\server\solr\$coreName" -Name "data" -ItemType "directory"
 
-	if($usingDefault){
+	if ($usingDefault) {
 		xcopy "..\wwwroot\server\solr\configsets\_default\conf\*" "..\wwwroot\server\solr\$coreName\conf\*" /S /Y
 	}
-	else{
+	else {
 		xcopy "..\wwwroot\server\solr\configsets\basic_configs\conf\*" "..\wwwroot\server\solr\$coreName\conf\*" /S /Y
 	}
 
