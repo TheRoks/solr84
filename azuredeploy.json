@@ -9,7 +9,10 @@
         },
         "siteLocation": {
             "type": "string",
-            "defaultValue": "East US 2"
+            "defaultValue": "[resourceGroup().location]",
+            "metadata": {
+                "description": "Location for all resources."
+            }
         },
         "siteName": {
             "type": "string",
